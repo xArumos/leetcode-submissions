@@ -1,25 +1,19 @@
 class Solution:
-    class TreeNode:
-        def __init__(self, val, diffs):
-            self.val = val
-            self.diffs = diffs
-            self.children = []
-    def buildTree(self, root, candidates):
-        if root.val == 0:
-            if root.diffs not in self.result:
-                self.result.append(root.diffs)
-        else:
-            for num in candidates:
-                if root.val >= num:
-                    copy = root.diffs + [num]
-                    copy.sort()
-                    root.children.append(self.TreeNode(root.val - num, copy))
-            for node in root.children:
-                self.buildTree(node, candidates)
-    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
-        self.result = []
-        root = self.TreeNode(target, [])
+    def combinationSum(self, candidates, target):
+        result = []
+        path = []
 
-        self.buildTree(root, candidates)
-
-        return self.result
+        def dfs(remain, start):
+            if remain == 0:
+                result.append(path[:])
+                return
+            for i in range(start, len(candidates)):
+                num = candidates[i]
+                if num > remain:
+                    continue
+                path.append(num)
+                dfs(remain - num, i)
+                path.pop()
+            
+        dfs(target, 0)
+        return result
